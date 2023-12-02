@@ -5,6 +5,7 @@ import Data.Map (Map)
 import qualified Data.Map as M
 import Data.Maybe
 import Data.Function
+import Criterion.Main
 
 -- Slow splitOn for prototyping
 splitOn :: String -> String -> [String]
@@ -52,3 +53,11 @@ main = do
   let inp' = init (splitOn "\n" inp)
   print (part1 inp')
   print (part2 inp')
+  defaultMain
+    [ bgroup
+        dayString
+        [ bench "part1" $ whnf part1 inp',
+          bench "part2" $ whnf part2 inp'
+        ]
+    ]
+
