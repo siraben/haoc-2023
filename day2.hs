@@ -1,14 +1,15 @@
 {-# OPTIONS_GHC -Wall #-}
+
 import Criterion.Main
+import Data.Bifunctor
 import Data.Foldable
 import Data.Functor
 import qualified Text.ParserCombinators.ReadP as P
-import Data.Bifunctor
 
 type Move = (Int, Int, Int)
 
-part1 :: Num a => [(a, [Move])] -> a
-part1 games = sum (map fst (filter (isGamePossible . snd)  games))
+part1 :: (Num a) => [(a, [Move])] -> a
+part1 games = sum (map fst (filter (isGamePossible . snd) games))
 
 part2 :: [(a, [Move])] -> Int
 part2 games = sum (map (minCubeSet . snd) games)
@@ -33,20 +34,23 @@ parseGameLine :: P.ReadP [[(Color, Int)]]
 parseGameLine = P.string "Game" *> int *> P.string ":" *> P.skipSpaces *> P.sepBy parseMove (P.char ';')
 
 isMovePossible :: Move -> Bool
-isMovePossible (r,g,b) = r <= 12 && g <= 13 && b <= 14
+isMovePossible (r, g, b) = r <= 12 && g <= 13 && b <= 14
 
 isGamePossible :: [Move] -> Bool
 isGamePossible = all isMovePossible
 
 minCubeSet :: [Move] -> Int
-minCubeSet = (\(r, g, b) -> r * g * b) . foldl' (\(r, g, b) (r',g',b') -> (max r r', max g g', max b b') ) (0, 0, 0)
+minCubeSet = (\(r, g, b) -> r * g * b) . foldl' (\(r, g, b) (r', g', b') -> (max r r', max g g', max b b')) (0, 0, 0)
 
 mkMove :: [(Color, Int)] -> Move
-mkMove = foldl' (\(r, g, b) (c, n) -> case c of
-  R -> (r + n, g, b)
-  G -> (r, g + n, b)
-  B -> (r, g, b + n)
-  ) (0, 0, 0)
+mkMove =
+  foldl'
+    ( \(r, g, b) (c, n) -> case c of
+        R -> (r + n, g, b)
+        G -> (r, g + n, b)
+        B -> (r, g, b + n)
+    )
+    (0, 0, 0)
 
 main :: IO ()
 main = do
