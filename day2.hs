@@ -1,67 +1,61 @@
-import Control.Applicative hiding ((<|>))
-import Control.Arrow
-import Control.Monad
+{-# OPTIONS_GHC -Wall #-}
 import Criterion.Main
-import Data.Bits
-import Data.ByteString.Char8 (ByteString)
-import qualified Data.ByteString.Char8 as B
-import Data.Char
 import Data.Foldable
-import Data.Function
 import Data.Functor
-import qualified Data.Graph as G
-import Data.IntMap (IntMap)
-import qualified Data.IntMap as IM
-import Data.IntSet (IntSet)
-import qualified Data.IntSet as IM
-import qualified Data.IntSet as IS
-import Data.List
-import Data.Map (Map)
-import qualified Data.Map as M
-import Data.Maybe
-import Data.Set (Set)
-import qualified Data.Set as S
-import qualified Data.Text as T
 import qualified Text.ParserCombinators.ReadP as P
+import Data.Bifunctor
 
-swap (a, b) = (b, a)
+type Move = (Int, Int, Int)
 
-part1 games = sum (map fst (filter (isGamePossible . snd) games))
+part1 :: Num a => [(a, [Move])] -> a
+part1 games = sum (map fst (filter (isGamePossible . snd)  games))
 
+part2 :: [(a, [Move])] -> Int
 part2 games = sum (map (minCubeSet . snd) games)
 
 data Color = R | G | B deriving (Show, Eq, Ord)
 
-type Moves = [(Int, Color)]
-
-type Game = [Moves]
-
 int :: P.ReadP Int
 int = P.readS_to_P reads
 
+tok :: P.ReadP b -> P.ReadP b
 tok = (P.skipSpaces *>)
 
 parseMove :: P.ReadP [(Color, Int)]
 parseMove = do
-  let c = (,) <$> int <*> tok (P.choice [P.string "red" $> R, P.string "green" $> G, P.string "blue" $> B])
-  P.sepBy (swap <$> c) (P.char ',' *> P.skipSpaces)
+  let c = do
+        n <- int
+        m <- tok (P.choice [P.string "red" $> R, P.string "green" $> G, P.string "blue" $> B])
+        pure (m, n)
+  P.sepBy c (P.char ',' *> P.skipSpaces)
 
+parseGameLine :: P.ReadP [[(Color, Int)]]
 parseGameLine = P.string "Game" *> int *> P.string ":" *> P.skipSpaces *> P.sepBy parseMove (P.char ';')
 
-isMovePossible :: Map Color Int -> Bool
-isMovePossible m = m M.!? R <= Just 12 && m M.!? G <= Just 13 && m M.!? B <= Just 14
+isMovePossible :: Move -> Bool
+isMovePossible (r,g,b) = r <= 12 && g <= 13 && b <= 14
 
+isGamePossible :: [Move] -> Bool
 isGamePossible = all isMovePossible
 
-minCubeSet :: [Map Color Int] -> Int
-minCubeSet = (\(r, g, b) -> r * g * b) . foldl' (\(r, g, b) m -> (max r (M.findWithDefault 0 R m), max g (M.findWithDefault 0 G m), max b (M.findWithDefault 0 B m))) (0, 0, 0)
+minCubeSet :: [Move] -> Int
+minCubeSet = (\(r, g, b) -> r * g * b) . foldl' (\(r, g, b) (r',g',b') -> (max r r', max g g', max b b') ) (0, 0, 0)
 
+mkMove :: [(Color, Int)] -> Move
+mkMove = foldl' (\(r, g, b) (c, n) -> case c of
+  R -> (r + n, g, b)
+  G -> (r, g + n, b)
+  B -> (r, g, b + n)
+  ) (0, 0, 0)
+
+main :: IO ()
 main = do
   let dayNumber = 2 :: Int
   let dayString = "day" <> show dayNumber
   let dayFilename = dayString <> ".txt"
   inp <- lines <$> readFile dayFilename
-  let games = zip [1 ..] (map (map M.fromList . fst . last . P.readP_to_S parseGameLine) inp)
+  let games' = zip ([1 ..] :: [Int]) (map (fst . last . P.readP_to_S parseGameLine) inp)
+  let games = map (second (map mkMove)) games'
   print (part1 games)
   print (part2 games)
   defaultMain
