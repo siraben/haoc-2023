@@ -1,7 +1,6 @@
 {-# OPTIONS_GHC -Wall #-}
 
 import Criterion.Main
-import Data.Bifunctor
 import Data.Foldable
 import Data.Functor
 import qualified Text.ParserCombinators.ReadP as P
@@ -59,7 +58,7 @@ main = do
   let dayFilename = dayString <> ".txt"
   inp <- lines <$> readFile dayFilename
   let games' = zip ([1 ..] :: [Int]) (map (fst . last . P.readP_to_S parseGameLine) inp)
-  let games = map (second (map mkMove)) games'
+  let games = [(i, map mkMove ms) | (i, ms) <- games']
   print (part1 games)
   print (part2 games)
   defaultMain
