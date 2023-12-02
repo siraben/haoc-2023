@@ -82,16 +82,16 @@ Apple M1 Pro, 32 GB RAM, 10 Threads
 
 ```
 benchmarking day1/part1
-time                 655.6 μs   (653.2 μs .. 658.9 μs)
+time                 119.3 μs   (119.2 μs .. 119.5 μs)
                      1.000 R²   (1.000 R² .. 1.000 R²)
-mean                 656.3 μs   (655.1 μs .. 657.6 μs)
-std dev              4.079 μs   (3.435 μs .. 5.206 μs)
+mean                 119.4 μs   (119.2 μs .. 119.5 μs)
+std dev              532.6 ns   (424.8 ns .. 700.4 ns)
 
 benchmarking day1/part2
-time                 1.401 ms   (1.399 ms .. 1.404 ms)
+time                 732.2 μs   (731.3 μs .. 733.2 μs)
                      1.000 R²   (1.000 R² .. 1.000 R²)
-mean                 1.402 ms   (1.399 ms .. 1.405 ms)
-std dev              9.317 μs   (7.773 μs .. 11.71 μs)
+mean                 732.5 μs   (731.1 μs .. 733.9 μs)
+std dev              4.863 μs   (3.902 μs .. 6.437 μs)
 ```
 </details>
 
@@ -108,7 +108,7 @@ std dev              5.740 ns   (4.758 ns .. 7.012 ns)
 benchmarking day2/part2
 time                 1.963 μs   (1.960 μs .. 1.967 μs)
                      1.000 R²   (1.000 R² .. 1.000 R²)
-mean                 1.963 μs   (1.960 μs .. 1.966 μs)
+mean                 1.963 μs   (1.960 μs .. 1.966 μs) 
 std dev              10.35 ns   (8.449 ns .. 12.62 ns)
 ```
 </details>

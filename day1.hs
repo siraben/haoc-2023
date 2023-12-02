@@ -1,58 +1,52 @@
+{-# OPTIONS_GHC -Wall #-}
+
 import Criterion.Main
 import Data.Char
-import Data.Function
 import Data.List
-import Data.Map (Map)
-import qualified Data.Map as M
 import Data.Maybe
-import qualified Data.Text as T
 
--- Slow splitOn for prototyping
-splitOn :: String -> String -> [String]
-splitOn sep s = T.unpack <$> T.splitOn (T.pack sep) (T.pack s)
-
+numWords :: [(String, Int)]
 numWords =
-  M.fromList
-    [ ("one", 1),
-      ("two", 2),
-      ("three", 3),
-      ("four", 4),
-      ("five", 5),
-      ("six", 6),
-      ("seven", 7),
-      ("eight", 8),
-      ("nine", 9)
-    ]
+  [ ("one", 1),
+    ("two", 2),
+    ("three", 3),
+    ("four", 4),
+    ("five", 5),
+    ("six", 6),
+    ("seven", 7),
+    ("eight", 8),
+    ("nine", 9)
+  ]
 
 -- Start working down here
-part1 = sum . map (read . (\x -> [head x] ++ [last x])) . map (filter isDigit)
+part1 :: [[Char]] -> Int
+part1 = sum . map ((\x -> 10 * digitToInt (head x) + digitToInt (last x)) . filter isDigit)
 
 -- check if any prefix of the string up to 5 characters matches one of the numWords
 -- or if the string starts with a digit. return the strating digit or the corresponding number
 -- of the word
 parseNum :: String -> Maybe Int
-parseNum s = case find (\x -> isPrefixOf x s) (M.keys numWords) of
-  Just x -> pure $ numWords M.! x
-  Nothing -> if isDigit (head s) then pure $ read [head s] else Nothing
+parseNum s@(c : _) = case find ((`isPrefixOf` s) . fst) numWords of
+  Just (_, x) -> pure x
+  Nothing -> if isDigit c then pure $ ord c - ord '0' else Nothing
+parseNum _ = error "not possible"
 
--- now do the same thing but backwards, starting from
--- parseNum' :: String -> Maybe Int
-
--- For this function, do parseNum continually forward until the first Just
--- parseNums :: String -> Int
+parseNums :: [Char] -> Int
 parseNums = head . mapMaybe parseNum . tails
 
+parseNums2 :: [Char] -> Int
 parseNums2 = head . mapMaybe parseNum . tail . reverse . tails
 
--- part 2 is doing parseNums and parseNums2 on each line and summing the results
+part2 :: [[Char]] -> Int
 part2 = sum . map (\x -> 10 * parseNums x + parseNums2 x)
 
+main :: IO ()
 main = do
   let dayNumber = 1 :: Int
   let dayString = "day" <> show dayNumber
   let dayFilename = dayString <> ".txt"
   inp <- readFile dayFilename
-  let inp' = init (splitOn "\n" inp)
+  let inp' = lines inp
   print (part1 inp')
   print (part2 inp')
   defaultMain
