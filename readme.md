@@ -100,15 +100,16 @@ std dev              4.863 μs   (3.902 μs .. 6.437 μs)
 
 ```
 benchmarking day2/part1
-time                 1.044 μs   (1.043 μs .. 1.046 μs)
+time                 1.049 μs   (1.042 μs .. 1.055 μs)
                      1.000 R²   (1.000 R² .. 1.000 R²)
-mean                 1.046 μs   (1.045 μs .. 1.047 μs)
-std dev              3.993 ns   (3.262 ns .. 4.967 ns)
+mean                 1.048 μs   (1.046 μs .. 1.051 μs)
+std dev              8.988 ns   (7.142 ns .. 11.40 ns)
 
 benchmarking day2/part2
-time                 1.883 μs   (1.879 μs .. 1.887 μs)
+time                 1.894 μs   (1.890 μs .. 1.898 μs)
                      1.000 R²   (1.000 R² .. 1.000 R²)
-mean                 1.881 μs   (1.879 μs .. 1.884 μs)
-std dev              7.418 ns   (3.554 ns .. 13.65 ns)
+mean                 1.894 μs   (1.891 μs .. 1.900 μs)
+std dev              13.86 ns   (7.967 ns .. 22.19 ns)
+
 ```
 </details>

@@ -7,10 +7,10 @@ import qualified Text.ParserCombinators.ReadP as P
 
 type Move = (Int, Int, Int)
 
-part1 :: (Num a) => [(a, [Move])] -> a
+part1 :: [(Int, [Move])] -> Int
 part1 games = sum (map fst (filter (isGamePossible . snd) games))
 
-part2 :: [(a, [Move])] -> Int
+part2 :: [(Int, [Move])] -> Int
 part2 games = sum (map (minCubeSet . snd) games)
 
 data Color = R | G | B deriving (Show, Eq, Ord)
