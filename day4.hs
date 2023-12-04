@@ -125,28 +125,29 @@ range a b = enum a (signum (b - a)) b
 part1 = sum . map g
   where
     g (a,b) = f (IS.size $ IS.intersection a b)
-    f n = 2 ^ (max 0 (n - 1))
+    f 0 = 0
+    f n = 2 ^ (n - 1)
 
 score (a, b) = (IS.size $ IS.intersection a b)
 
-part2 inp = sum $ foldl' go (M.fromList (map (,1) [1..(length l)])) l
+part2 inp = sum $ foldl' go (M.fromList [(1,1)]) l
   where
     l = zip [1..] inp
     scores = M.map score (M.fromList l)
     go cnt (n, g) = cnt'
       where
         s = scores M.! n
-        amt = cnt M.! n
+        amt = M.findWithDefault 1 n cnt
         toAdd
           | s == 0 = []
           | otherwise = [n + 1..(min (length l) (n + s))]
         cnt' = go2 toAdd cnt
           where
             -- no more cards to add
-            go2 [] m = m
+            go2 [] m = case M.lookup n m of Nothing -> M.insert n 1 m; _ -> m
             -- for each card to add, update its amount by number of instances of
             -- our current amount
-            go2 (x:xs) m = go2 xs (M.adjust (+ amt) x m)
+            go2 (x:xs) m = go2 xs (M.insertWith (\_ a -> a + amt) x (1 + amt) m)
 
 
 process = f . span (/= "|") . drop 2 . words
