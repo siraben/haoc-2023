@@ -1,10 +1,9 @@
 {-# OPTIONS_GHC -Wall #-}
 
 import Criterion.Main
-import Data.Foldable
-import qualified Data.IntMap as IM
 import Data.IntSet (IntSet)
 import qualified Data.IntSet as IS
+import Data.List
 
 -- Start working down here
 part1 :: [(IntSet, IntSet)] -> Int
@@ -16,24 +15,17 @@ part1 = sum . map (f . score)
 score :: (IntSet, IntSet) -> Int
 score (a, b) = IS.size $ IS.intersection a b
 
+-- zipWith (+) but for lists of different lengths
+zipAdd :: [Int] -> [Int] -> [Int]
+zipAdd l [] = l
+zipAdd [] l = l
+zipAdd (x : xs) (y : ys) = (x + y) : zipAdd xs ys
+
 part2 :: [(IntSet, IntSet)] -> Int
-part2 inp = snd $ foldl' go (IM.fromList [(1, 1)], 0) l
+part2 inp = snd $ foldl' go (replicate (length inp) 1, 0) inp
   where
-    l = zip [1 ..] inp
-    go (cnt, tot) (n, g) = (IM.delete n cnt', tot + amt)
-      where
-        s = score g
-        amt = IM.findWithDefault 1 n cnt
-        toAdd
-          | s == 0 = []
-          | otherwise = [n + 1 .. (min (length l) (n + s))]
-        cnt' = go2 toAdd cnt
-          where
-            -- no more cards to add
-            go2 [] m = case IM.lookup n m of Nothing -> IM.insert n 1 m; _ -> m
-            -- for each card to add, update its amount by number of instances of
-            -- our current amount
-            go2 (x : xs) m = go2 xs (IM.insertWith (\_ a -> a + amt) x (1 + amt) m)
+    go (c : rs, tot) g = (zipAdd (replicate (score g) c) rs, tot + c)
+    go _ _ = error "not possible"
 
 process :: String -> (IntSet, IntSet)
 process = f . span (/= "|") . drop 2 . words
