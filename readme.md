@@ -131,3 +131,21 @@ mean                 774.0 μs   (772.1 μs .. 777.1 μs)
 std dev              8.316 μs   (6.077 μs .. 12.97 μs)
 ```
 </details>
+
+### Day 4
+<details>
+
+```
+benchmarking day4/part1
+time                 8.512 μs   (8.507 μs .. 8.519 μs)
+                     1.000 R²   (1.000 R² .. 1.000 R²)
+mean                 8.516 μs   (8.511 μs .. 8.523 μs)
+std dev              20.28 ns   (16.69 ns .. 24.94 ns)
+
+benchmarking day4/part2
+time                 63.64 μs   (63.57 μs .. 63.70 μs)
+                     1.000 R²   (1.000 R² .. 1.000 R²)
+mean                 63.58 μs   (63.54 μs .. 63.62 μs)
+std dev              141.1 ns   (116.0 ns .. 182.6 ns)
+```
+</details>

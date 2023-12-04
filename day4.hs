@@ -122,20 +122,17 @@ range :: (Num a, Ord a) => a -> a -> [a]
 range a b = enum a (signum (b - a)) b
 
 -- Start working down here
--- part1 :: ([Int], [Int]) -> Int
-part1 (a, b) = f (IS.size $ IS.intersection a b)
+part1 = sum . map g
   where
-    f 0 = 0
-    f n = 2 ^ (n - 1) :: Int
+    g (a,b) = f (IS.size $ IS.intersection a b)
+    f n = 2 ^ (max 0 (n - 1))
 
 score (a, b) = (IS.size $ IS.intersection a b)
 
-part2 l = foldl' go (M.fromList (map (,1) [1..(length l)])) l
+part2 inp = sum $ foldl' go (M.fromList (map (,1) [1..(length l)])) l
   where
+    l = zip [1..] inp
     scores = M.map score (M.fromList l)
-    -- m is how many copies of each card we have
-    -- nth game with setup g
-    -- cnt is current cnt map
     go cnt (n, g) = cnt'
       where
         s = scores M.! n
@@ -149,7 +146,7 @@ part2 l = foldl' go (M.fromList (map (,1) [1..(length l)])) l
             go2 [] m = m
             -- for each card to add, update its amount by number of instances of
             -- our current amount
-            go2 (x:xs) m = go2 xs (M.insertWith (\_ a -> a + amt) x amt m)
+            go2 (x:xs) m = go2 xs (M.adjust (+ amt) x m)
 
 
 process = f . span (/= "|") . drop 2 . words
@@ -160,18 +157,12 @@ main = do
   let dayString = "day" <> show dayNumber
   let dayFilename = dayString <> ".txt"
   inp <- map process . lines <$> readFile dayFilename
-  let scores = zip [1..] inp
-  -- print scores
-  -- print [(n, score x) | (n, x) <- scores]
-  print (sum (map part1 inp))
-  -- print (part2 scores)
-  print (M.foldl' (+) 0 (part2 scores))
-  -- print (part1 inp)
-  -- print (part2 inp)
-  -- defaultMain
-  --   [ bgroup
-  --       dayString
-  --       [ bench "part1" $ whnf part1 inp,
-  --         bench "part2" $ whnf part2 inp
-  --       ]
-  --   ]
+  print (part1 inp)
+  print (part2 inp)
+  defaultMain
+    [ bgroup
+        dayString
+        [ bench "part1" $ whnf part1 inp,
+          bench "part2" $ whnf part2 inp
+        ]
+    ]
