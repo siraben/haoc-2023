@@ -1,5 +1,6 @@
 {-# OPTIONS_GHC -Wall #-}
 
+import Criterion.Main
 import Data.Bifunctor
 import Data.Char
 import Data.List
@@ -90,6 +91,12 @@ starNeighbors (r, c) =
 getNumbs :: (Int, Int) -> M.Map (Int, Int) Int -> [Int]
 getNumbs (r, c) m = nub $ mapMaybe (m M.!?) (starNeighbors (r, c))
 
+part1 (pp, ss, grid) = sum $ map (\(_, _, _, d) -> d) (filter (`isPart` ss) pp)
+
+part2 (pp, ss, grid) = sum $ map product $ filter ((== 2) . length) $ map (`getNumbs` foldl' (\m' p -> M.union (explode p) m') M.empty (filter (`isPart` ss) pp)) (S.toList stars)
+  where
+    stars = mkStars grid
+
 main :: IO ()
 main = do
   let dayNumber = 3 :: Int
@@ -98,18 +105,14 @@ main = do
   inp <- lines <$> readFile dayFilename
   let grid = mkGrid inp
   let ss = mkSymSet grid
-  let stars = mkStars grid
-  let ns = filter (`isPart` ss) (process inp)
-  let nss = foldl' (\m' p -> M.union (explode p) m') M.empty ns
-  print $ sum $ map (\(_, _, _, d) -> d) (filter (`isPart` ss) (process inp))
-  print $ sum $ map product $ filter ((== 2) . length) $ map (`getNumbs` nss) (S.toList stars)
-
--- print (part1 inp)
--- print (part2 inp)
--- defaultMain
---   [ bgroup
---       dayString
---       [ bench "part1" $ whnf part1 inp,
---         bench "part2" $ whnf part2 inp
---       ]
---   ]
+  let pp = process inp
+  let inp' = (pp, ss, grid)
+  print $ part1 inp'
+  print $ part2 inp'
+  defaultMain
+    [ bgroup
+        dayString
+        [ bench "part1" $ whnf part1 inp',
+          bench "part2" $ whnf part2 inp'
+        ]
+    ]
