@@ -11,9 +11,17 @@ part1 = totalWaysToWin
 part2 :: (Int, Int) -> Int
 part2 = uncurry waysToWin
 
--- go through each hold time, calc distance, keep the ones that beat record
 waysToWin :: Int -> Int -> Int
-waysToWin t d = length $ filter (> d) [hold * (t - hold) | hold <- [0 .. (t - 1)]]
+waysToWin t d
+  | d <= 0 = 0
+  | otherwise = max 0 (min (t - 1) (floor (max root1 root2)) - max 0 (ceiling (min root1 root2)) + 1)
+  where
+    a = -1
+    b = fromIntegral t :: Double
+    c = fromIntegral (-d) :: Double
+    discr = b ^ 2 - 4 * a * c
+    root1 = (-b - sqrt discr) / (2 * a)
+    root2 = (-b + sqrt discr) / (2 * a)
 
 totalWaysToWin :: [(Int, Int)] -> Int
 totalWaysToWin = product . map (uncurry waysToWin)
