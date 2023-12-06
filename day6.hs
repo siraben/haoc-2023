@@ -14,12 +14,12 @@ part2 = uncurry waysToWin
 waysToWin :: Int -> Int -> Int
 waysToWin t d
   | d <= 0 = 0
-  | otherwise = max 0 (min (t - 1) (floor (max root1 root2)) - max 0 (ceiling (min root1 root2)) + 1)
+  | otherwise = floor (max root1 root2) - ceiling (min root1 root2) + 1
   where
     a = -1
     b = fromIntegral t :: Double
     c = fromIntegral (-d) :: Double
-    discr = b ^ 2 - 4 * a * c
+    discr = b * b - 4 * a * c
     root1 = (-b - sqrt discr) / (2 * a)
     root2 = (-b + sqrt discr) / (2 * a)
 

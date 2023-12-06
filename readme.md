@@ -156,15 +156,15 @@ std dev              37.82 ns   (24.82 ns .. 55.72 ns)
 
 ```
 benchmarking day6/part1
-time                 34.17 ns   (33.99 ns .. 34.36 ns)
+time                 32.44 ns   (32.38 ns .. 32.50 ns)
                      1.000 R²   (1.000 R² .. 1.000 R²)
-mean                 33.98 ns   (33.92 ns .. 34.10 ns)
-std dev              276.6 ps   (169.7 ps .. 464.4 ps)
+mean                 32.48 ns   (32.45 ns .. 32.52 ns)
+std dev              117.6 ps   (87.24 ps .. 181.8 ps)
 
 benchmarking day6/part2
-time                 11.70 ns   (11.69 ns .. 11.71 ns)
+time                 11.49 ns   (11.46 ns .. 11.52 ns)
                      1.000 R²   (1.000 R² .. 1.000 R²)
-mean                 11.70 ns   (11.69 ns .. 11.73 ns)
-std dev              54.10 ps   (40.95 ps .. 83.40 ps)
+mean                 11.46 ns   (11.45 ns .. 11.47 ns)
+std dev              43.81 ps   (31.63 ps .. 59.76 ps)
 ```
 </details>
