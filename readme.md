@@ -168,3 +168,22 @@ mean                 11.46 ns   (11.45 ns .. 11.47 ns)
 std dev              43.81 ps   (31.63 ps .. 59.76 ps)
 ```
 </details>
+
+### Day 7
+<details>
+
+```
+benchmarking day7/part1
+time                 2.707 ms   (2.700 ms .. 2.718 ms)
+                     1.000 R²   (1.000 R² .. 1.000 R²)
+mean                 2.703 ms   (2.700 ms .. 2.708 ms)
+std dev              12.46 μs   (7.554 μs .. 19.53 μs)
+
+benchmarking day7/part2
+time                 56.08 ms   (55.94 ms .. 56.22 ms)
+                     1.000 R²   (1.000 R² .. 1.000 R²)
+mean                 56.04 ms   (55.98 ms .. 56.11 ms)
+std dev              123.4 μs   (95.78 μs .. 155.8 μs)
+
+```
+</details>
