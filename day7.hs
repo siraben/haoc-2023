@@ -71,7 +71,9 @@ compareHands2 h1 h2
   | otherwise = compare (handType h1) (handType h2)
 
 typeForHand :: String -> HandType
-typeForHand h = handType (maximumBy compareHands2 (expandJs h))
+typeForHand h
+  | 'J' `elem` h = handType (maximumBy compareHands2 (expandJs h))
+  | otherwise = handType h
 
 calcWinnings :: [(a, Int)] -> Int
 calcWinnings l = sum $ zipWith (*) (map snd l) [1 ..]
