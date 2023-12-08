@@ -12,7 +12,7 @@ import qualified Data.Text as T
 splitOn :: String -> String -> [String]
 splitOn sep s = T.unpack <$> T.splitOn (T.pack sep) (T.pack s)
 
-useRule :: Char -> IntMap (a, a) -> IS.Key -> a
+useRule :: Char -> IntMap (a, a) -> Int -> a
 useRule 'L' m l = fst (m IM.! l)
 useRule 'R' m l = snd (m IM.! l)
 useRule _ _ _ = error "useRule: bad rule"
@@ -37,20 +37,20 @@ namesEndingIn :: Int -> IntMap (Int, Int) -> [Int]
 namesEndingIn c m = filter (endsWith c) $ IM.keys m
 
 cycleLength :: IntMap (Int, Int) -> String -> Int -> Int
-cycleLength m rules pos = go (IS.fromList [pos]) 0 (cycle rules)
+cycleLength m rules pos = go (IS.singleton pos) 0 (cycle rules)
   where
-    endCond = all ((== 25) . (`mod` 26)) . IS.toList
-    go ns !n _ | endCond ns = n
-    go ns !n (c : cs) = go (IS.map (useRule c m) ns) (n + 1) cs
+    endCond = all (endsWith 25) . IS.toList
+    go ns n _ | endCond ns = n
+    go ns n (c : cs) = go (IS.map (useRule c m) ns) (n + 1) cs
     go _ _ [] = error "cycleLength: not possible"
 
 part1 :: (String, IntMap (Int, Int)) -> Int
 part1 (rules, m) = cycleLength m rules 0
 
-part2 :: ([Char], IntMap (Int, Int)) -> Int
-part2 (rules, m) = foldl1' lcm cycleLengths
+part2 :: Int -> ([Char], IntMap (Int, Int)) -> Int
+part2 p1 (rules, m) = foldl' lcm p1 cycleLengths
   where
-    allAs = namesEndingIn 0 m
+    allAs = filter (/= 0) (namesEndingIn 0 m)
     cycleLengths = map (cycleLength m rules) allAs
 
 main :: IO ()
@@ -59,12 +59,13 @@ main = do
   let dayString = "day" <> show dayNumber
   let dayFilename = dayString <> ".txt"
   inp <- process <$> readFile dayFilename
+  let p1 = part1 inp
   print (part1 inp)
-  print (part2 inp)
+  print (part2 p1 inp)
   defaultMain
     [ bgroup
         dayString
         [ bench "part1" $ whnf part1 inp,
-          bench "part2" $ whnf part2 inp
+          bench "part2" $ whnf (part2 p1) inp
         ]
     ]
